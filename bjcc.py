@@ -39,7 +39,7 @@ def print_number(number):
 
 def print_countdown(number):
     for i in range(number, 0, -1):
-        sys.stdout.write(f"\rGAME SART IN: {i}")
+        sys.stdout.write(f"\rGAME START IN: {i}")
         sys.stdout.flush()
         time.sleep(1)
     print()
@@ -81,8 +81,8 @@ def main():
     start_game()
 
     for level in range(1, 11):
-        for _ in range(3):
-            print(f"ROUND STARTING. LEVEL {level}.")
+        for r in range(1, 4):
+            print(f"LEVEL {level}. ROUND {r} STARTING.")
             time.sleep(0.5)
             print_countdown(3)
             count = 0
