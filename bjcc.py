@@ -31,8 +31,10 @@ card_map = {
     13: {"value": "K", "count_delta": -1}
 }
 
+suits = ["\u2663", "\u2665", "\u2666", "\u2660"]
+
 def print_number(number):
-    sys.stdout.write(f"\r > {number:>2}")
+    sys.stdout.write(f"\r > {number:>3}")
     sys.stdout.flush()
 
 def print_countdown(number):
@@ -42,9 +44,42 @@ def print_countdown(number):
         time.sleep(1)
     print()
 
+def display_instructions():
+    print("""
+    BJCC TRAINING:
+
+    How to play:
+    - You will be shown a series of cards
+    - Your goal is to keep track of the running count as cards are displayed.
+
+    Card Values and Count Delta:
+    - Cards 2 to 6: +1
+    - Cards 7 to 9: 0
+    - Cards 10, J, Q, K, and A: -1
+
+    Example:
+    - If the cards shown are: 4♣, J♠, 5♥
+    - The count deltas are: +1, -1, +1
+    - The running count is: 0 (start) + 1 (4♣) - 1 (J♠) + 1 (5♥) = 1
+
+    At the end of each round, you will be asked for the count.
+    - If you are correct, you proceed to the next round.
+    - If you are incorrect, the game ends.
+
+    Good luck!
+    """)
+
+def start_game():
+    start = input("Are you ready (Yes to start)? ").strip().lower()
+    while len(start) < 1 or start[0].lower() != "y":
+        start = input("Please type 'Yes' to start: ").strip().lower()
+    print("GAME START!")
+
 def main():
-    print("BJCC TRAINING:")
-    
+
+    display_instructions()
+    start_game()
+
     for level in range(1, 11):
         for _ in range(3):
             print(f"ROUND STARTING. LEVEL {level}.")
@@ -54,12 +89,12 @@ def main():
             for _ in range(level_map[level]["interval"]):
                 number = random.randint(1, 13)
                 count += card_map[number]["count_delta"]
-                print_number(card_map[number]["value"])
+                print_number(f"{card_map[number]['value']}{random.choice(suits)}")
                 time.sleep(1/level_map[level]["speed"])
                 print_number("")
                 time.sleep(1/level_map[level]["speed"])
 
-            print("\nWHAT IS THE COUNT???")
+            print("\nWHAT IS THE COUNT?")
             user_count = input()
             try:
                 if int(user_count) == count:
