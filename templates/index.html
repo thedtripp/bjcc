@@ -32,6 +32,19 @@
             </ul>
             <p>At the end of each round, you will be asked for the count. If you are correct, you proceed to the next
                 round. If you are incorrect, the game ends.</p>
+                <p>Select your desired level:</p>
+            <select id="level-select">
+                <option value="1">Level 1</option>
+                <option value="2">Level 2</option>
+                <option value="3">Level 3</option>
+                <option value="4">Level 4</option>
+                <option value="5">Level 5</option>
+                <option value="6">Level 6</option>
+                <option value="7">Level 7</option>
+                <option value="8">Level 8</option>
+                <option value="9">Level 9</option>
+                <option value="10">Level 10</option>
+            </select>
             <p>Good luck!</p>
             <button id="start-button">Start Game</button>
         </div>
@@ -86,6 +99,7 @@
             const startButton = document.getElementById('start-button');
             const game = document.getElementById('game');
             const levelRound = document.getElementById('level-round');
+            const levelSelect = document.getElementById('level-select');
             const countdown = document.getElementById('countdown');
             const cardDisplay = document.getElementById('card-display');
             const livesDisplay = document.getElementById('lives-display');
@@ -95,7 +109,7 @@
             const message = document.getElementById('message');
             const restartButton = document.getElementById('restart-button');
 
-            let currentLevel = 1;
+            currentLevel = parseInt(levelSelect.value);
             let currentRound = 1;
             let lives = 3;
             let count = 0;
@@ -111,7 +125,7 @@
                 game.classList.remove('hidden');
                 restartButton.classList.add('hidden');
                 message.textContent = '';
-                currentLevel = 1;
+                currentLevel = parseInt(levelSelect.value);
                 currentRound = 1;
                 lives = 3;
                 updateLivesDisplay();
