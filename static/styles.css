@@ -68,3 +68,74 @@ h2 {
     font-size: 1.5em;
     margin: 0 5px;
 }
+
+/* Style for the numeric input */
+#count-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.5em;
+    margin: 10px 0;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* Custom styles for the input stepper buttons */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.custom-number-input {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.custom-number-input input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+    -webkit-appearance: none;
+}
+
+.custom-number-input input[type="number"] {
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.custom-number-input .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.custom-number-input button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1.5em;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.custom-number-input button.decrement {
+    right: auto;
+    left: 10px;
+}
+
+.custom-number-input button:active {
+    background: #0056b3;
+}
