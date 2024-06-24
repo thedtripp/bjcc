@@ -1,0 +1,60 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+}
+
+#game-container {
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+}
+
+#instructions p {
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+#instructions ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+#card-display img {
+    background-color: #ffffff;
+    width: 100px;
+    height: auto;
+    margin: 10px;
+    border: 2px solid black;
+}
+
+#countdown {
+    font-size: 1.5em;
+    margin: 10px 0;
+}
+
+#message {
+    font-size: 1.2em;
+    margin: 20px 0;
+}
+
+#input-section {
+    margin: 20px 0;
+}

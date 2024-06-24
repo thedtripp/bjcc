@@ -1,0 +1,1 @@
+web: gunicorn bjcc_server:app

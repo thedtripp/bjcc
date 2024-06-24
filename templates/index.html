@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BJCC Trainer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div id="game-container">
+        <div id="instructions">
+            <h2>BJCC TRAINING</h2>
+            <p>How to play:</p>
+            <ul>
+                <li>You will be shown a series of cards.</li>
+                <li>Your goal is to keep track of the running count as cards are displayed.</li>
+            </ul>
+            <p>Card Values and Count Delta:</p>
+            <ul>
+                <li>Cards 2 to 6: +1</li>
+                <li>Cards 7 to 9: 0</li>
+                <li>Cards 10, J, Q, K, and A: -1</li>
+            </ul>
+            <p>Example:</p>
+            <ul>
+                <li>If the cards shown are: 4♣, J♠, 5♥</li>
+                <li>The count deltas are: +1, -1, +1</li>
+                <li>The running count is: 0 (start) + 1 (4♣) - 1 (J♠) + 1 (5♥) = 1</li>
+            </ul>
+            <p>At the end of each round, you will be asked for the count. If you are correct, you proceed to the next round. If you are incorrect, the game ends.</p>
+            <p>Good luck!</p>
+            <button id="start-button">Start Game</button>
+        </div>
+        <div id="game" class="hidden">
+            <div id="level-round"></div>
+            <div id="countdown"></div>
+            <div id="card-display"></div>
+            <div id="input-section" class="hidden">
+                <label for="count-input">What is the count?</label>
+                <input type="number" id="count-input">
+                <button id="submit-count">Submit</button>
+            </div>
+            <div id="message"></div>
+            <button id="restart-button" class="hidden">Restart Game</button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const levelMap = {
+        1: { speed: 800, interval: 3 },
+        2: { speed: 600, interval: 4 },
+        3: { speed: 400, interval: 6 },
+        4: { speed: 300, interval: 9 },
+        5: { speed: 250, interval: 13 },
+        6: { speed: 200, interval: 18 },
+        7: { speed: 175, interval: 24 },
+        8: { speed: 150, interval: 31 },
+        9: { speed: 125, interval: 39 },
+        10: { speed: 100, interval: 48 },
+    };
+
+    const cardMap = {
+        1: { value: "ace", countDelta: -1 },
+        2: { value: "2", countDelta: 1 },
+        3: { value: "3", countDelta: 1 },
+        4: { value: "4", countDelta: 1 },
+        5: { value: "5", countDelta: 1 },
+        6: { value: "6", countDelta: 1 },
+        7: { value: "7", countDelta: 0 },
+        8: { value: "8", countDelta: 0 },
+        9: { value: "9", countDelta: 0 },
+        10: { value: "10", countDelta: -1 },
+        11: { value: "jack", countDelta: -1 },
+        12: { value: "queen", countDelta: -1 },
+        13: { value: "king", countDelta: -1 }
+    };
+
+    // const suits = ["\u2663", "\u2665", "\u2666", "\u2660"];
+    const suits = ["clubs", "hearts", "diamonds", "spades"];
+
+    const instructions = document.getElementById('instructions');
+    const startButton = document.getElementById('start-button');
+    const game = document.getElementById('game');
+    const levelRound = document.getElementById('level-round');
+    const countdown = document.getElementById('countdown');
+    const cardDisplay = document.getElementById('card-display');
+    const inputSection = document.getElementById('input-section');
+    const countInput = document.getElementById('count-input');
+    const submitCount = document.getElementById('submit-count');
+    const message = document.getElementById('message');
+    const restartButton = document.getElementById('restart-button');
+
+    let currentLevel = 1;
+    let currentRound = 1;
+    let count = 0;
+    let interval;
+    let cardSequence = [];
+
+    startButton.addEventListener('click', startGame);
+    submitCount.addEventListener('click', checkCount);
+    restartButton.addEventListener('click', restartGame);
+
+    function startGame() {
+        instructions.classList.add('hidden');
+        game.classList.remove('hidden');
+        restartButton.classList.add('hidden');
+        message.textContent = '';
+        currentLevel = 1;
+        currentRound = 1;
+        startLevel();
+    }
+
+    function restartGame() {
+        message.textContent = '';
+        countInput.value = '';
+        startGame();
+    }
+
+    function startLevel() {
+        message.textContent = '';
+        levelRound.textContent = `LEVEL ${currentLevel}. ROUND ${currentRound} STARTING.`;
+        countdown.textContent = 'GAME START IN: 3';
+        cardSequence = [];
+        count = 0;
+        setTimeout(() => countdown.textContent = 'GAME START IN: 2', 1000);
+        setTimeout(() => countdown.textContent = 'GAME START IN: 1', 2000);
+        setTimeout(() => {
+            countdown.textContent = '';
+            displayCards();
+        }, 3000);
+    }
+
+    function displayCards() {
+        let index = 0;
+        let showCardBack = false;
+        interval = setInterval(() => {
+            if (index < levelMap[currentLevel].interval) {
+                if (showCardBack) {
+                    //cardDisplay.innerHTML = `<img src="img/back.png" alt="Card Back">`;
+                    cardDisplay.innerHTML = `<img src="{{ url_for('static', filename='img/back.png') }}" alt="Card Back">`;
+                    showCardBack = !showCardBack;
+                } else {
+                    const card = getRandomCard();
+                    cardSequence.push(card);
+                    count += cardMap[card.number].countDelta;
+                    cardDisplay.innerHTML = `<img src="/static/img/${cardMap[card.number].value}_of_${card.suit}.png" alt="${cardMap[card.number].value} of ${card.suit}">`;
+                    showCardBack = !showCardBack;
+                    index++;
+                }
+            } else {
+                clearInterval(interval);
+                cardDisplay.textContent = '';
+                inputSection.classList.remove('hidden');
+                countInput.value = '0';
+            }
+        }, levelMap[currentLevel].speed);
+    }
+
+    function getRandomCard() {
+        const number = Math.floor(Math.random() * 13) + 1;
+        const suit = suits[Math.floor(Math.random() * suits.length)];
+        return { number, suit };
+    }
+
+    function checkCount() {
+        const userCount = parseInt(countInput.value, 10);
+        inputSection.classList.add('hidden');
+        if (userCount === count) {
+            message.textContent = `CORRECT! THE COUNT IS: ${count}!`;
+            if (currentRound < 3) {
+                currentRound++;
+                setTimeout(startLevel, 2000);
+            } else if (currentLevel < 10) {
+                currentLevel++;
+                currentRound = 1;
+                setTimeout(startLevel, 2000);
+            } else {
+                message.textContent = 'CONGRATULATIONS! YOU COMPLETED ALL LEVELS!';
+                restartButton.classList.remove('hidden');
+            }
+        } else {
+            message.textContent = `INCORRECT. THE COUNT IS: ${count}. GAME OVER.`;
+            restartButton.classList.remove('hidden');
+        }
+        countInput.value = '';
+    }
+});
+
+    </script>
+</body>
+</html>
