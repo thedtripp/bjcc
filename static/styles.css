@@ -69,6 +69,11 @@ h2 {
     margin: 0 5px;
 }
 
+#submit-count {
+    padding: 10px;
+    font-size: 1em;
+}
+
 /* Style for the numeric input */
 #count-input {
     width: 100%;
