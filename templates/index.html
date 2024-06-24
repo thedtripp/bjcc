@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BJCC Trainer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div id="game-container">
@@ -33,6 +34,7 @@
         </div>
         <div id="game" class="hidden">
             <div id="level-round"></div>
+            <div id="lives-display"></div>
             <div id="countdown"></div>
             <div id="card-display"></div>
             <div id="input-section" class="hidden">
@@ -84,6 +86,7 @@
     const levelRound = document.getElementById('level-round');
     const countdown = document.getElementById('countdown');
     const cardDisplay = document.getElementById('card-display');
+    const livesDisplay = document.getElementById('lives-display');
     const inputSection = document.getElementById('input-section');
     const countInput = document.getElementById('count-input');
     const submitCount = document.getElementById('submit-count');
@@ -92,6 +95,7 @@
 
     let currentLevel = 1;
     let currentRound = 1;
+    let lives = 3;
     let count = 0;
     let interval;
     let cardSequence = [];
@@ -107,6 +111,8 @@
         message.textContent = '';
         currentLevel = 1;
         currentRound = 1;
+        lives = 3;
+        updateLivesDisplay();
         startLevel();
     }
 
@@ -119,6 +125,7 @@
     function startLevel() {
         message.textContent = '';
         levelRound.textContent = `LEVEL ${currentLevel} - ROUND ${currentRound}.`;
+        updateLivesDisplay();
         countdown.textContent = 'GAME START IN: 3';
         cardSequence = [];
         count = 0;
@@ -136,7 +143,6 @@
         interval = setInterval(() => {
             if (index < levelMap[currentLevel].interval) {
                 if (showCardBack) {
-                    //cardDisplay.innerHTML = `<img src="img/back.png" alt="Card Back">`;
                     cardDisplay.innerHTML = `<img src="{{ url_for('static', filename='img/back.png') }}" alt="Card Back">`;
                     showCardBack = !showCardBack;
                 } else {
@@ -154,6 +160,13 @@
                 countInput.value = '0';
             }
         }, levelMap[currentLevel].speed);
+    }
+
+    function updateLivesDisplay() {
+        livesDisplay.innerHTML = '';
+        for (let i = 0; i < lives; i++) {
+            livesDisplay.innerHTML += '<i class="fas fa-heart"></i>';
+        }
     }
 
     function getRandomCard() {
@@ -179,8 +192,15 @@
                 restartButton.classList.remove('hidden');
             }
         } else {
-            message.textContent = `INCORRECT. THE COUNT IS: ${count}. GAME OVER.`;
-            restartButton.classList.remove('hidden');
+            lives--;
+            updateLivesDisplay();
+            if (lives <= 0) {
+                message.textContent = `INCORRECT. THE COUNT IS: ${count}. GAME OVER.`;
+                restartButton.classList.remove('hidden');
+            } else {
+                message.textContent = `INCORRECT. THE COUNT IS: ${count}.`;
+                setTimeout(startLevel, 2000);
+            }
         }
         countInput.value = '';
     }

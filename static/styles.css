@@ -10,7 +10,7 @@ body {
 
 #game-container {
     width: 80%;
-    max-width: 600px;
+    max-width: 500px;
     text-align: center;
     background-color: white;
     padding: 20px;
@@ -61,4 +61,10 @@ h2 {
 
 #input-section {
     margin: 20px 0;
+}
+
+#lives-display .fa-heart {
+    color: red;
+    font-size: 1.5em;
+    margin: 0 5px;
 }
