@@ -140,29 +140,36 @@
             }
 
             function displayCards() {
+                cardDisplay.innerHTML = `<img src="/static/img/back.png" alt="Card Back">`;
                 let index = 0;
-                let showCardBack = false;
                 interval = setInterval(() => {
                     if (index < levelMap[currentLevel].interval) {
-                        if (showCardBack) {
-                            cardDisplay.innerHTML = `<img src="{{ url_for('static', filename='img/back.png') }}" alt="Card Back">`;
-                            showCardBack = !showCardBack;
-                        } else {
-                            const card = getRandomCard();
-                            cardSequence.push(card);
-                            count += cardMap[card.number].countDelta;
-                            cardDisplay.innerHTML = `<img src="/static/img/${cardMap[card.number].value}_of_${card.suit}.png" alt="${cardMap[card.number].value} of ${card.suit}">`;
-                            showCardBack = !showCardBack;
-                            index++;
-                        }
+                        cardDisplay.innerHTML = `<img src="/static/img/back.png" alt="Card Back">`;
+                        const card = getRandomCard();
+                        cardSequence.push(card);
+                        count += cardMap[card.number].countDelta;
+
+                        // Create a new image element for the card front
+                        const frontCardImage = new Image();
+                        frontCardImage.src = `/static/img/${cardMap[card.number].value}_of_${card.suit}.png`;
+                        frontCardImage.alt = `${cardMap[card.number].value} of ${card.suit}`;
+
+                        // Set a timeout to display the front card after levelMap[currentLevel].speed milliseconds
+                        setTimeout(() => {
+                            cardDisplay.innerHTML = '';
+                            cardDisplay.appendChild(frontCardImage);
+                        }, levelMap[currentLevel].speed);
+
+                        index++;
                     } else {
                         clearInterval(interval);
                         cardDisplay.textContent = '';
                         inputSection.classList.remove('hidden');
                         countInput.value = '0';
                     }
-                }, levelMap[currentLevel].speed);
+                }, levelMap[currentLevel].speed * 2);
             }
+
 
             function updateLivesDisplay() {
                 livesDisplay.innerHTML = '';
@@ -206,25 +213,6 @@
                 }
                 countInput.value = '';
             }
-
-            function preloadImages() {
-            const images = [];
-            for (const suit of suits) {
-                for (let i = 1; i <= 13; i++) {
-                    const card = cardMap[i].value + "_of_" + suit + ".png";
-                    const img = new Image();
-                    img.src = "/static/img/" + card;
-                    images.push(img);
-                }
-            }
-            // Preload the card back image
-            const backImg = new Image();
-            backImg.src = "/static/img/back.png";
-            images.push(backImg);
-        }
-
-        // Preload images when the document is ready
-        preloadImages();
         });
     </script>
 </body>
