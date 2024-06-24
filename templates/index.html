@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BJCC Trainer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 </head>
 
 <body>
@@ -59,7 +61,7 @@
                 <button id="submit-count">Submit</button>
             </div>
             <div id="message"></div>
-            <button id="restart-button" class="hidden">Restart Game</button>
+            <button id="reset-button" class="hidden">Reset Game</button>
         </div>
     </div>
     <script>
@@ -107,7 +109,7 @@
             const countInput = document.getElementById('count-input');
             const submitCount = document.getElementById('submit-count');
             const message = document.getElementById('message');
-            const restartButton = document.getElementById('restart-button');
+            const resetButton = document.getElementById('reset-button');
 
             currentLevel = parseInt(levelSelect.value);
             let currentRound = 1;
@@ -118,12 +120,12 @@
 
             startButton.addEventListener('click', startGame);
             submitCount.addEventListener('click', checkCount);
-            restartButton.addEventListener('click', restartGame);
+            resetButton.addEventListener('click', resetGame);
 
             function startGame() {
                 instructions.classList.add('hidden');
                 game.classList.remove('hidden');
-                restartButton.classList.add('hidden');
+                resetButton.classList.add('hidden');
                 message.textContent = '';
                 currentLevel = parseInt(levelSelect.value);
                 currentRound = 1;
@@ -132,10 +134,12 @@
                 startLevel();
             }
 
-            function restartGame() {
+            function resetGame() {
+                game.classList.add('hidden');
+                resetButton.classList.add('hidden');
+                instructions.classList.remove('hidden');
                 message.textContent = '';
                 countInput.value = '';
-                startGame();
             }
 
             function startLevel() {
@@ -212,14 +216,14 @@
                         setTimeout(startLevel, 2000);
                     } else {
                         message.textContent = 'CONGRATULATIONS! YOU COMPLETED ALL LEVELS!';
-                        restartButton.classList.remove('hidden');
+                        resetButton.classList.remove('hidden');
                     }
                 } else {
                     lives--;
                     updateLivesDisplay();
                     if (lives <= 0) {
                         message.textContent = `INCORRECT. THE COUNT IS: ${count}. GAME OVER.`;
-                        restartButton.classList.remove('hidden');
+                        resetButton.classList.remove('hidden');
                     } else {
                         message.textContent = `INCORRECT. THE COUNT IS: ${count}.`;
                         setTimeout(startLevel, 2000);
