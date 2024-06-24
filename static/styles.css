@@ -19,6 +19,10 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+#game {
+    height: 250px;
+}
+
 h2 {
     text-align: center;
 }
